@@ -1,17 +1,16 @@
 using ContosoPizza.Data;
 using ContosoPizza.Services;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddSqlite<PizzaContext>("Data Source=contosoPizza.db");
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add the PizzaContext
+builder.Services.AddSqlite<PizzaContext>("Data Source=contosoPizza.db");
 
-// Add the PromotionsContext
+builder.Services.AddSqlite<PromotionsContext>("Data Source=Promotions/Promotions.db");
 
 builder.Services.AddScoped<PizzaService>();
 
@@ -28,7 +27,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Add the CreateDbIfNotExists method call
+app.CreatedDbIfNotExists();
 
 app.MapGet("/", () => @"Contoso Pizza management API. Navigate to /swagger to open the Swagger test UI.");
 

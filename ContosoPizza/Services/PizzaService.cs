@@ -37,9 +37,24 @@ public class PizzaService
         return newPizza;
     }
 
-    public void AddTopping(int PizzaId, int ToppingId)
+    public void AddTopping(int pizzaId, int toppingId)
     {
-        throw new NotImplementedException();
+        var pizzaToUpdate = _context.Pizzas.Find(pizzaId);
+        var toppingToAdd = _context.Toppings.Find(toppingId);
+
+        if (pizzaToUpdate == null || toppingToAdd == null)
+        {
+            throw new InvalidOperationException("Pizza or topping does not exist");
+        }
+
+        if (pizzaToUpdate.Toppings is null)
+        {
+            pizzaToUpdate.Toppings = new List<Topping>();
+        }
+
+        pizzaToUpdate.Toppings.Add(toppingToAdd);
+
+        _context.SaveChanges();
     }
 
     public void UpdateSauce(int pizzaId, int sauceId)
@@ -59,6 +74,11 @@ public class PizzaService
 
     public void DeleteById(int id)
     {
-        throw new NotImplementedException();
+        var pizzaToDelete = _context.Pizzas.Find(id);
+        if (pizzaToDelete is not null)
+        {
+            _context.Pizzas.Remove(pizzaToDelete);
+            _context.SaveChanges();
+        }
     }
 }
